@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор</title>
+    <style>
+        #calculator {
+            width: 200px;
+            height: 300px;
+            margin: 100px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #calculator span {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            margin: 5px;
+            text-align: center;
+            line-height: 40px;
+            cursor: pointer;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        #calculator .operator {
+            background: #d3d3d3;
+        }
+        #calculator .equal {
+            background: #ffcc00;
+        }
+        #calculator .clear {
+            background: #ff6666;
+        }
+        #calculator input {
+            width: 180px;
+            height: 40px;
+            margin: 5px;
+            text-align: right;
+            padding-right: 10px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="calculator">
+        <input type="text" id="display" disabled>
+        <span>7</span><span>8</span><span>9</span><span class="operator">+</span>
+        <span>4</span><span>5</span><span>6</span><span class="operator">-</span>
+        <span>1</span><span>2</span><span>3</span><span class="operator">x</span>
+        <span>0</span><span>.</span><span class="clear">C</span><span class="operator">/</span>
+        <span class="equal">=</span>
+    </div>
+
+    <script>
+        var keys = document.querySelectorAll('#calculator span');
+        var operators = ['+', '-', 'x', '/'];
+        var decimalAdded = false;
+
+        for (var i = 0; i < keys.length; i++) {
+            keys[i].onclick = function(e) {
+                var input = document.querySelector('#display');
+                var inputVal = input.value;
+                var btnVal = this.innerHTML;
+
+                if (btnVal == 'C') {
+                    input.value = '';
+                    decimalAdded = false;
+                } else if (btnVal == '=') {
+                    var equation = inputVal;
+                    var lastChar = equation[equation.length - 1];
+
+                    equation = equation.replace(/x/g, '*');
+
+                    if (operators.indexOf(lastChar) > -1 || lastChar == '.')
+                        equation = equation.replace(/.$/, '');
+
+                    if (equation)
+                        input.value = eval(equation);
+
+                    decimalAdded = false;
+                } else if (operators.indexOf(btnVal) > -1) {
+                    var lastChar = inputVal[inputVal.length - 1];
+
+                    if (inputVal != '' && operators.indexOf(lastChar) == -1)
+                        input.value += btnVal;
+                    else if (inputVal == '' && btnVal == '-')
+                        input.value += btnVal;
+
+                    if (operators.indexOf(lastChar) > -1 && inputVal.length > 1) {
+                        input.value = inputVal.replace(/.$/, btnVal);
+                    }
+
+                    decimalAdded = false;
+                } else if (btnVal == '.') {
+                    if (!decimalAdded) {
+                        input.value += btnVal;
+                        decimalAdded = true;
+                    }
+                } else {
+                    input.value += btnVal;
+                }
+
+                e.preventDefault();
+            }
+        }
+    </script>
+<div style="position: absolute; top: 10px; left: 10px;">
+    <img src="as/calclogo.gif" alt="Logo">
+</div>
+
+
+
+
+
+
+<div style="position: absolute; bottom: 10px; width: 100%; text-align: center; font-family: Tahoma;">
+    2024 Vasek Lednikofff and Limpe Tech
+</div>
+
+
+</body>
+</html>
